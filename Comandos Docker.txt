@@ -1,0 +1,20 @@
+# Para ver imagenes docker instaladas
+sudo docker images | head
+
+# Ver procesos de docker corriendo
+sudo docker ps -a
+
+# Ver el log de la imagen en proceso
+# sudo docker logs [NAMES]
+sudo docker logs General
+
+sudo apt install mysql-server
+
+# configurar contenedor
+# sudo docker run --name General -e MYSQL_ROOT_PASSWORD=ALMNet-387SQL -d mysql
+
+sudo docker start General
+
+sudo docker inspect General --> Extraer IPAddress
+
+mysql -u root -h 172.17.0.2 -pALMNet-387SQL

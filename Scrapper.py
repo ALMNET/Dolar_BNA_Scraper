@@ -96,7 +96,7 @@ print("Dolar Venta: " + str(dolarVenta))
 
 # Datos conexion
 connection = mysql.connector.connect(
-    host="172.17.0.3",
+    host="172.17.0.2",
     user="root",
     password="ALMNet-387SQL",
     database="General"
@@ -107,7 +107,7 @@ cursor = connection.cursor()
 
 # Prepare SQL query to INSERT a record into the table
 sql = """
-INSERT INTO `General`.Prueba 
+INSERT INTO `General`.Pruebas 
 (Fecha_Recepcion, Fecha_Creacion, Origen, Dolar_Venta, Dolar_Compra, Noticia_Relevante1, Noticia_Relevante2, Noticia_Relevante3) 
 VALUES (now(), now(), 'Banco Nacion', {dolarVenta}, {dolarCompra}, '', '', '');""".format(dolarVenta = dolarVenta, dolarCompra = dolarCompra)
 
