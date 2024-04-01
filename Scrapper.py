@@ -1,5 +1,6 @@
 import re
 from datetime import date, timedelta, datetime
+import mysql.connector
 # from openpyxl import Workbook, load_workbook
 # from colorama import Fore
 # from bs4 import BeautifulSoup
@@ -71,6 +72,9 @@ datosBase = re.sub(r"</td><td>", ";", datosBase)
 # Eliminación de etiquetas html
 datosBase = remove_html_tags(datosBase)
 
+# Conversion de comas a puntos para pasar a flotante
+datosBase = re.sub(r",", ".", datosBase)
+
 # Impresion de datos base
 # print(datosBase)
 
@@ -78,7 +82,47 @@ datosBase = remove_html_tags(datosBase)
 dolarCompra, datosBase = extractor_datos(datosBase)
 dolarVenta, datosBase = extractor_datos(datosBase)
 
+# Conversion a flotante
+dolarCompra = float(dolarCompra)
+dolarVenta = float(dolarVenta)
 
 # Salida de datos
-print("Dolar Compra: " + dolarCompra)
-print("Dolar Venta: " + dolarVenta)
+print("Dolar Compra: " + str(dolarCompra))
+print("Dolar Venta: " + str(dolarVenta))
+
+##########################################################################################
+################################ INSERTANDO DATOS EN LA DB ###############################
+##########################################################################################
+
+# Datos conexion
+connection = mysql.connector.connect(
+    host="172.17.0.3",
+    user="root",
+    password="ALMNet-387SQL",
+    database="General"
+)
+
+# Create a cursor object
+cursor = connection.cursor()
+
+# Prepare SQL query to INSERT a record into the table
+sql = """
+INSERT INTO `General`.Prueba 
+(Fecha_Recepcion, Fecha_Creacion, Origen, Dolar_Venta, Dolar_Compra, Noticia_Relevante1, Noticia_Relevante2, Noticia_Relevante3) 
+VALUES (now(), now(), 'Banco Nacion', {dolarVenta}, {dolarCompra}, '', '', '');""".format(dolarVenta = dolarVenta, dolarCompra = dolarCompra)
+
+
+#values = ("value1", "value2", "value3")
+
+
+# Execute the SQL query
+cursor.execute(sql)
+
+# Commit your changes to the database
+connection.commit()
+
+# Close the cursor and connection
+cursor.close()
+connection.close()
+
+print("Data inserted successfully!")
